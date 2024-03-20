@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "227252082418",
+    "project_id": "hairmainstreet",
+    "storage_bucket": "hairmainstreet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:227252082418:android:e355f1e96485cb99a0226b",
+        "android_client_info": {
+          "package_name": "com.example.hair_main_street"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvPZcSZT_qfdwObU5MHG_6sNcV18TiiJc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:227252082418:android:9ac975310c3ae7f9a0226b",
+        "android_client_info": {
+          "package_name": "com.example.hair_main_street_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvPZcSZT_qfdwObU5MHG_6sNcV18TiiJc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
