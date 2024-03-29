@@ -302,6 +302,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  flutter_paystack:
+    dependency: "direct main"
+    description:
+      name: flutter_paystack
+      sha256: b2038c8f0cfa5a3bdb7b0e2016ceaedbc57e4445180ce6aea56cb0d83a016973
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.7"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -340,10 +348,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
+      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "0.13.6"
   http_parser:
     dependency: transitive
     description:
@@ -352,6 +360,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.17.0"
   js:
     dependency: transitive
     description:

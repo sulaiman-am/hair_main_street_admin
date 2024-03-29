@@ -149,7 +149,13 @@ class AppDrawer extends StatelessWidget {
                 // Navigate to the user management page.
               },
             ),
-
+            ListTile(
+              hoverColor: colorHover,
+              title: const Text("Payments"),
+              onTap: () {
+                // Navigate to the user management page.
+              },
+            ),
             // Add more drawer items for other sections
           ],
         ),

@@ -50,6 +50,7 @@ dependencies:
   flutter_html: ^3.0.0-beta.2
   fl_chart: ^0.65.0
   firebase_analytics: ^10.7.2
+  flutter_paystack: ^1.0.7
 
 dev_dependencies:
   flutter_test:
