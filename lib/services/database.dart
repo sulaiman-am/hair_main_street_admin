@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:hair_main_street_admin/models/orderModel.dart';
 import 'package:hair_main_street_admin/models/userModel.dart';
 import 'package:hair_main_street_admin/models/vendorsModel.dart';
+import 'package:hair_main_street_admin/models/withdrawal_requests.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +13,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class DataBaseService {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   final String? uid;
   DataBaseService({this.uid});
 
@@ -26,6 +28,8 @@ class DataBaseService {
       FirebaseFirestore.instance.collection('orders');
   CollectionReference shopsCollection =
       FirebaseFirestore.instance.collection('vendors');
+  CollectionReference withdrawalRequests =
+      FirebaseFirestore.instance.collection('withdrawal requests');
 
   //verify role
   Future<Map<String, dynamic>?> verifyRole() async {
@@ -329,6 +333,111 @@ class DataBaseService {
   }
 
   //payment stuff
+
+  // Stream to get withdrawal requests
+  Stream<List<Map<String, dynamic>>> getWithdrawalRequests() {
+    return _db
+        .collection('wallet')
+        .doc(
+            'kzkNrjdKyUP2U53G1FVNugrHLJL2') // Assuming this is the global document
+        .collection('withdrawal requests')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return {
+          'id': doc.id, // Include the document ID
+          'withdrawal amount': doc['withdrawal amount'],
+          'userID': doc['userID'],
+          'status': doc['status'],
+        };
+      }).toList();
+    });
+  }
+
+  // Method to approve a withdrawal request
+  Future<void> approveWithdrawalRequest(String userId, String requestId) async {
+    final withdrawalRequestDoc = _db
+        .collection('wallet')
+        .doc(userId)
+        .collection('withdrawal requests')
+        .doc(requestId);
+
+    final docSnapshot = await withdrawalRequestDoc.get();
+    final docData = docSnapshot.data();
+
+    if (docData == null) {
+      throw Exception('Withdrawal request does not exist.');
+    }
+
+    if (docData['status'] == 'approved') {
+      throw Exception('Request is already approved.');
+    }
+
+    await withdrawalRequestDoc.update({'status': 'approved'});
+
+    final withdrawnAmount =
+        (docData['withdrawal amount'] as num?)?.toDouble() ?? 0.0;
+
+    if (userId.isNotEmpty) {
+      await deductFromWallet(userId, withdrawnAmount);
+    } else {
+      throw Exception('User ID is empty or null');
+    }
+  }
+
+  // Method to deduct the withdrawn amount from the user's wallet balance
+  Future<void> deductFromWallet(String userId, double amount) async {
+    try {
+      // Correcting the collection path to match Firestore structure
+      final walletDoc = _db.collection('wallet').doc(userId);
+      final docSnapshot = await walletDoc.get();
+
+      if (!docSnapshot.exists) {
+        throw Exception('Wallet document for user $userId does not exist.');
+      }
+
+      final docData = docSnapshot.data();
+      print('Document data for user $userId: $docData');
+
+      if (docData != null) {
+        final currentBalance = (docData['balance'] as num?)?.toDouble() ?? 0.0;
+        print('Current balance: $currentBalance, Amount to deduct: $amount');
+
+        if (currentBalance < amount) {
+          throw Exception('Insufficient balance');
+        }
+
+        await walletDoc.update({'balance': currentBalance - amount});
+        print(
+            'Deducted $amount from user $userId. New balance: ${currentBalance - amount}');
+      } else {
+        throw Exception('Document data is null');
+      }
+    } catch (e) {
+      print('Error deducting from wallet: $e');
+      throw e; // Re-throw the error to handle it in the calling function
+    }
+  }
+
+  // Update approval requests
+  Future<void> updateWithdrawalRequest(
+      WithdrawalRequest withdrawalRequest) async {
+    try {
+      final documentReference = _db
+          .collection('wallet')
+          .doc('kzkNrjdKyUP2U53G1FVNugrHLJL2')
+          .collection('withdrawal requests')
+          .doc(withdrawalRequest.id);
+
+      // Update only the 'status' field
+      await documentReference.update({'status': 'approved'});
+    } catch (e) {
+      print("Error updating withdrawal request: $e");
+      throw e;
+    }
+  }
+
+// requestID
 
   //referral
 

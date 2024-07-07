@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hair_main_street_admin/authentication/sign_in.dart';
+import 'package:hair_main_street_admin/controllers/authController.dart';
+import 'package:hair_main_street_admin/controllers/userController.dart';
 import 'package:hair_main_street_admin/pages/dashboard_page.dart';
 import 'package:hair_main_street_admin/firebase_options.dart';
 import 'package:hair_main_street_admin/wrapper.dart';
@@ -13,6 +15,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Get.put(AuthController());
   runApp(const MyApp());
 }
 
@@ -29,6 +32,9 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const DashboardPage());
+        initialBinding: BindingsBuilder(() {
+          Get.put(UserController());
+        }),
+        home: SignInPage());
   }
 }
